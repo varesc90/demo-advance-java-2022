@@ -2,6 +2,8 @@ package badcode;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -80,52 +82,18 @@ class RegisterBusinessTest {
 
     }
 
-    @Test
-    @DisplayName("Speaker Experience = 3, Fee should be 250")
-    void case07() {
+    @ParameterizedTest
+    @CsvSource({
+            "0,500",
+            "1,500",
+            "2,250",
+            "9,50",
+            "10,0"
+    })
+    void case07(int expYear, int expectedFee) {
         RegisterBusiness business = new RegisterBusiness();
-
-        Speaker speaker = new Speaker();
-        speaker.setFirstName("firstname");
-        speaker.setLastName("lastname");
-        speaker.setEmail("ming@live.com");
-        speaker.setExp(3);
-        Exception exception = assertThrows(SaveSpeakerException.class, () -> business.register(null, speaker));
-        assertEquals(250, speaker.getRegistrationFee());
-        assertEquals("Can't save a speaker.",exception.getMessage());
-
-    }
-
-    @Test
-    @DisplayName("Speaker Experience = 5, Fee should be 250")
-    void case08() {
-        RegisterBusiness business = new RegisterBusiness();
-
-        Speaker speaker = new Speaker();
-        speaker.setFirstName("firstname");
-        speaker.setLastName("lastname");
-        speaker.setEmail("ming@live.com");
-        speaker.setExp(5);
-        Exception exception = assertThrows(SaveSpeakerException.class, () -> business.register(null, speaker));
-        assertEquals(100, speaker.getRegistrationFee());
-        assertEquals("Can't save a speaker.",exception.getMessage());
-
-    }
-
-    @Test
-    @DisplayName("Speaker Experience = 5, Fee should be 250")
-    void case09() {
-        RegisterBusiness business = new RegisterBusiness();
-
-        Speaker speaker = new Speaker();
-        speaker.setFirstName("firstname");
-        speaker.setLastName("lastname");
-        speaker.setEmail("ming@live.com");
-        speaker.setExp(9);
-        Exception exception = assertThrows(SaveSpeakerException.class, () -> business.register(null, speaker));
-        assertEquals(50, speaker.getRegistrationFee());
-        assertEquals("Can't save a speaker.",exception.getMessage());
-
+        int actualFee = business.getFee(expYear);
+        assertEquals(expectedFee,actualFee);
     }
 
     @Test
